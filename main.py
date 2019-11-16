@@ -31,7 +31,7 @@ class Test(webapp2.RequestHandler):
         self.response.write(str(something))
 
 class Upload(webapp2.RequestHandler):
-    def get(self):
+    def put(self):
         product_id = self.request.get('product_id')
         merchant_id = self.request.get('merchant_id')
         order_id = self.request.get('order_id')
@@ -40,8 +40,10 @@ class Upload(webapp2.RequestHandler):
         size = self.request.get('size')
         desc = self.request.get('desc')
         rating = self.request.get('rating')
-        image = self.request.get('image')
         supplier_id = self.request.get('supplier_id')
+
+        uploaded_file = self.request.POST.get('image')
+        image = uploaded_file.file.read()
 
         datastore = Datastore()
 

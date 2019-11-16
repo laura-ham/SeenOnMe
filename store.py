@@ -27,8 +27,8 @@ class Entity(ndb.Model):
 
     description = ndb.StringProperty(indexed=False)
     rating =  ndb.IntegerProperty(indexed=False)
-    # image = ndb.BlobProperty()
-    image = ndb.StringProperty(indexed=False)
+    image = ndb.BlobProperty(indexed=False)
+    # image = ndb.StringProperty(indexed=False)
 
 
 class Datastore:
