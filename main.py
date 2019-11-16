@@ -33,10 +33,14 @@ class Test(webapp2.RequestHandler):
 
 class Upload(webapp2.RequestHandler):
     def put(self):
+        jsonstring = self.request.body
+        jsonstring = jsonstring.replace("'", '"')
+        jsonobject = json.loads(jsonstring)
+
         product_id = self.request.get('product_id')
         merchant_id = self.request.get('merchant_id')
         order_id = self.request.get('order_id')
-        height = self.request.get('height')
+        height = jsonobject['height']
         waist = self.request.get('waist')
         size = self.request.get('size')
         desc = self.request.get('desc')
@@ -50,7 +54,7 @@ class Upload(webapp2.RequestHandler):
         # img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
 
         datastore = Datastore()
-
+            
 
         try:
             datastore.add_review(
