@@ -39,7 +39,7 @@ class Upload(webapp2.RequestHandler):
         waist = self.request.get('waist')
         size = self.request.get('size')
         desc = self.request.get('desc')
-        rating = self.rrequestequest.get('rating')
+        rating = self.request.get('rating')
         image = self.request.get('image')
         supplier_id = self.request.get('supplier_id')
 
