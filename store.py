@@ -14,9 +14,9 @@ from google.appengine.ext import ndb
 class Entity(ndb.Model):
     product_id = ndb.StringProperty(indexed=True)
     merchant_id = ndb.StringProperty(indexed=True)
-    order_id = ndb.StringProperty(indexed=False)
+    order_id = ndb.StringProperty(indexed=True)
     timestamp = ndb.StringProperty(indexed=False)
-    supplier_id = ndb.IntegerProperty(indexed=False)
+    supplier_id = ndb.IntegerProperty(indexed=True)
     
     #user = ndb.StringProperty(indexed=False)
     #review = ndb.StringProperty(indexed=False)
