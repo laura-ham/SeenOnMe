@@ -45,7 +45,7 @@ class Datastore:
         size): # ==
 
         # get ordered list of reviews
-        reviews = Review.query(Review.merchant_id == merchant_id)
+        reviews = Review.query(Review.merchant_id == merchant_id).fetch()
         review_height = reviews.height
         review_waist = reviews.waist
 
