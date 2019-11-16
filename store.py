@@ -11,7 +11,7 @@ from google.appengine.ext import ndb
 #     waist = ndb.FloatProperty(indexed=True)
 #     size = ndb.FloatProperty(indexed=True)
 
-class Entity(ndb.Model):
+class Review(ndb.Model):
     product_id = ndb.StringProperty(indexed=True)
     merchant_id = ndb.StringProperty(indexed=True)
     order_id = ndb.StringProperty(indexed=True)
@@ -28,11 +28,23 @@ class Entity(ndb.Model):
     description = ndb.StringProperty(indexed=False)
     rating =  ndb.IntegerProperty(indexed=False)
     image = ndb.BlobProperty(indexed=False)
-    # image = ndb.StringProperty(indexed=False)
+
+    verified = ndb.StringProperty(indexed=False)
+
+class ToReview(ndb.Model):
+    product_id = ndb.StringProperty(indexed=True)
+    order_id = ndb.StringProperty(indexed=True)
 
 
 class Datastore:
-    def add_entity(self,
+    def get_to_review(self, product_id, order_id):
+        return ToReview.query(ToReview.order_id == order_id, ToReview.product_id == product_id).fetch()
+
+    def add_to_review(self, product_id, order_id):
+        entity = ToReview(product_id=product_id, order_id=order_id)
+        entity.put()
+
+    def add_review(self,
         product_id,
         merchant_id,
         order_id,
@@ -50,8 +62,13 @@ class Datastore:
         # user = User(height = height, waist=waist, size=size)
         # user.put()
 
-        entity = Entity(product_id=product_id, merchant_id=merchant_id, order_id=order_id, timestamp="dd-mm-yyy", supplier_id=supplier_id, description = desc, rating = rating, image = image, height = height, waist=waist, size=size)
-        entity.put()
+        review = Review(product_id=product_id, merchant_id=merchant_id, order_id=order_id, timestamp="dd-mm-yyy", supplier_id=supplier_id, description = desc, rating = rating, image = image, height = height, waist=waist, size=size)
+        review.put()
+
+        # remove from ToReview list
+        # entity = self.get_to_review(product_id=product_id, order_id=order_id)
+        # entity.delete()
+
         # exists = self.check_entity_exists(entity)
         # if not exists:
         #     reg.put()
@@ -61,21 +78,19 @@ class Datastore:
 
     def verify_ids(self,
         product_id,
-        merchant_id,
-        order_id,
-        supplier_id):
+        order_id):
 
         # Check if entity is in Entity
-        check = Entity.query(Entity.product_id == product_id, Entity.merchant_id == merchant_id, Entity.order_id == order_id, Entity.supplier_id == supplier_id).fetch()
+        check = ToReview.query(ToReview.product_id == product_id, ToReview.order_id == order_id).fetch()
         if len(check) > 0:
             return True
         return False        
 
     def get_order_id(self, order_id):
-        return Entity.query(Entity.order_id == order_id).fetch()
+        return Review.query(Review.order_id == order_id).fetch()
 
     def get_product_id(self, product_id):
-        return Entity.query(Entity.product_id == product_id).fetch()
+        return Review.query(Review.product_id == product_id).fetch()
 
     # def check_registry_exists(self, registry):
     #     check = Registry.query(Registry.value == registry).fetch()
