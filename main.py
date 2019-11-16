@@ -14,6 +14,7 @@
 
 import webapp2
 from store import Datastore
+import json
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -27,8 +28,8 @@ class Test(webapp2.RequestHandler):
         datastore = Datastore()
         something =  datastore.get_product_id(q)
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write(str(something))
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write( json.dumps( {'data': str(something)} ) )
 
 class Upload(webapp2.RequestHandler):
     def put(self):
@@ -63,8 +64,8 @@ class Upload(webapp2.RequestHandler):
             supplier_id = int(supplier_id)
         )
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Review Added')
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write( json.dumps( {data: {'code': 201, 'message': "Successful lalalala"}	}) )
 
 class Verify(webapp2.RequestHandler):
     def get(self):
@@ -78,11 +79,11 @@ class Verify(webapp2.RequestHandler):
             order_id = order_id
         )
 
-        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.headers['Content-Type'] = 'application/json'
         if verified: 
-            self.response.write('Ids verified')
+            self.response.write( json.dumps( {data: {'code': 201, 'message': "Ids Verified"}	}) )
         else:
-            self.response.write('ERROR')
+            self.response.write( json.dumps( {data: {'code': 404, 'message': "not found in database"}	}) )
 
 class Register(webapp2.RequestHandler):
     def put(self):
@@ -96,8 +97,8 @@ class Register(webapp2.RequestHandler):
             order_id = order_id,
         )
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Registered')
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write( json.dumps( {data: {'code': 201, 'message': "Data Successfully Added"}	}) )
 
 class Reviews(webapp2.RequestHandler):
     def get(self):
@@ -130,8 +131,22 @@ class Reviews(webapp2.RequestHandler):
             size = size
             )
 
+        data = []
+        for rev in reviews:
+            dataDict = dict()
+            dataDict['height'] = rev.height
+            dataDict['waist'] = rev.waist
+            dataDict['size'] = rev.size
+            dataDict['rating'] = rev.rating
+            dataDict['description'] = rev.description
+            dataDict['image'] = rev.image
+
+            data.append(dataDict)
+
+        jData = json.dumps( {'data': data } )
+
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.write(reviews)
+        self.response.write(jData)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),

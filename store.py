@@ -53,15 +53,15 @@ class Datastore:
             reviews = Review.query(Review.merchant_id == merchant_id).fetch()
         
         if waist and height:
-            reviews.sort(key=lambda x: (abs(x.waist-waist), abs(x.height-height)), reverse=True)
+            reviews.sort(key=lambda x: (abs(x.waist-waist), abs(x.height-height)), reverse=False)
         elif height:
-            reviews.sort(key=lambda x: abs(x.height-height), reverse=True)
+            reviews.sort(key=lambda x: abs(x.height-height), reverse=False)
         elif waist:
-            reviews.sort(key=lambda x: abs(x.waist-waist), reverse=True)
+            reviews.sort(key=lambda x: abs(x.waist-waist), reverse=False)
 
         # send ordered list of reviews
-        ordered_result = str(reviews)
-        return ordered_result
+        # ordered_result = str(reviews)
+        return reviews
 
 
     def get_to_review(self, product_id, order_id):
