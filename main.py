@@ -65,7 +65,7 @@ class Verify(webapp2.RequestHandler):
     def get(self):
         product_id = self.request.get('product_id')
         merchant_id = self.request.get('merchant_id')
-        order_id = self.request.get('order_id').
+        order_id = self.request.get('order_id')
         supplier_id = self.request.get('supplier_id')
 
         datastore = Datastore()
