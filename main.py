@@ -14,6 +14,7 @@
 
 import webapp2
 from store import Datastore
+import imagecloud
 
 class MainPage(webapp2.RequestHandler):
     def get(self):

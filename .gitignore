@@ -2,3 +2,5 @@
 appengine-generated/
 
 node_modules/
+
+lib/

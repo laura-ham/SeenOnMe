@@ -3,3 +3,7 @@ curl -X GET "http://localhost:8080/upload?product_id=test_product_id_1&merchant_
 curl -X PUT http://localhost:8080/upload -F product_id=test_product_id_1 -F merchant_id=test_merchant_id_1 -F order_id=test_order_id_1 -F height=128 -F size=134 -F waist=555 -F desc=test_desc_1 -F rating=5 -F image=test_image_1 -F supplier_id=1
 
 curl -X PUT http://localhost:8080/upload -F image=@C:\\Users\\rizas\\Pictures\\signature.png -F product_id=test_product_id_1 -F merchant_id=test_merchant_id_1 -F order_id=test_order_id_1 -F height=128 -F size=134 -F waist=555 -F desc=test_desc_1 -F rating=5 -F supplier_id=1
+
+curl -X PUT http://localhost:8080/register -F product_id=test_product_id_1 -F order_id=test_order_id_1
+
+curl -X GET http://localhost:8080/verify?product_id=test_product_id_1&order_id=test_order_id_1

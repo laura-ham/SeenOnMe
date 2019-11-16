@@ -5,3 +5,12 @@ threadsafe: true
 handlers:
 - url: /.*
   script: main.app
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
+- name: ssl
+  version: 2.7.11
+
+includes:
+- cloudinary.yaml
