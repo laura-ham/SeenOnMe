@@ -39,7 +39,7 @@ class Upload(webapp2.RequestHandler):
         waist = self.request.get('waist')
         size = self.request.get('size')
         desc = self.request.get('desc')
-        rating = self.request.get('rating')
+        rating = self.rrequestequest.get('rating')
         image = self.request.get('image')
         supplier_id = self.request.get('supplier_id')
 
@@ -61,11 +61,31 @@ class Upload(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write('Entity Added')
 
-        
+class Verify(webapp2.RequestHandler):
+    def get(self):
+        product_id = self.request.get('product_id')
+        merchant_id = self.request.get('merchant_id')
+        order_id = self.request.get('order_id').
+        supplier_id = self.request.get('supplier_id')
 
+        datastore = Datastore()
+
+        verified = datastore.verify_ids(
+            product_id = product_id,
+            merchant_id = merchant_id,
+            order_id = order_id,
+            supplier_id = int(supplier_id)
+        )
+
+        self.response.headers['Content-Type'] = 'text/plain'
+        if verified: 
+            self.response.write('Ids verified')
+        else:
+            self.response.write('ERROR')
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/upload', Upload),
+    ('/verify', Verify),
     ('/test', Test)
 ], debug=True)
