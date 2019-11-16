@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+import json
 
 # class Review(ndb.Model):
 #     description = ndb.StringProperty(indexed=False)
@@ -27,7 +28,7 @@ class Review(ndb.Model):
 
     description = ndb.StringProperty(indexed=False)
     rating =  ndb.IntegerProperty(indexed=False)
-    image = ndb.BlobProperty(indexed=False)
+    image = ndb.StringProperty(indexed=False)
 
     verified = ndb.StringProperty(indexed=False)
 
@@ -37,6 +38,31 @@ class ToReview(ndb.Model):
 
 
 class Datastore:
+    def get_reviews(self,
+        merchant_id, # ==
+        height, # score for order
+        waist, # score for order
+        size): # ==
+
+        # get ordered list of reviews
+        reviews = Review.query(merchant_id=merchant_id)
+        review_height = reviews.height
+        review_waist = reviews.waist
+
+        if size:
+            reviews.add_filter('size', '=', size)
+        if waist and height:
+            reviews.sort(key=lambda x: (abs(x.waist-review_waist), abs(x.height-review_height)), reverse=True)
+        elif height:
+            reviews.sort(key=lambda x: abs(x.height-review_height), reverse=True)
+        elif waist:
+            reviews.sort(key=lambda x: abs(x.waist-review_waist), reverse=True)
+
+        # send ordered list of reviews
+        ordered_result = str(reviews)
+        return ordered_result
+
+
     def get_to_review(self, product_id, order_id):
         return ToReview.query(ToReview.order_id == order_id, ToReview.product_id == product_id).fetch()
 

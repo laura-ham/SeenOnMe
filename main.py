@@ -14,7 +14,6 @@
 
 import webapp2
 from store import Datastore
-import imagecloud
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -40,12 +39,11 @@ class Upload(webapp2.RequestHandler):
         waist = self.request.get('waist')
         size = self.request.get('size')
         desc = self.request.get('desc')
+        image = self.request.get('image')
         rating = self.request.get('rating')
         supplier_id = self.request.get('supplier_id')
 
-        uploaded_file = self.request.POST.get('image')
-        image = uploaded_file.file.read()
-
+        
         datastore = Datastore()
 
         datastore.add_review(
@@ -97,11 +95,30 @@ class Register(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write('Registered')
 
+class Reviews(webapp2.RequestHandler):
+    def get(self):
+        merchant_id = self.request.get('merchant_id')
+        height = self.request.get('height')
+        waist = self.request.get('waist')
+        size = self.request.get('size')
+        
+        datastore = Datastore()
+
+        reviews = datastore.get_reviews(
+            merchant_id = merchant_id,
+            height = float(height),
+            waist = float(waist),
+            size = float(size)
+            )
+
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(reviews)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/upload', Upload),
     ('/verify', Verify),
     ('/register', Register),
-    ('/test', Test)
+    ('/test', Test),
+    ('/reviews', Reviews)
 ], debug=True)
