@@ -46,6 +46,8 @@ class Upload(webapp2.RequestHandler):
         uploaded_file = self.request.POST.get('image')
         image = uploaded_file.file.read()
 
+        img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
+
         datastore = Datastore()
 
         datastore.add_review(
@@ -62,7 +64,8 @@ class Upload(webapp2.RequestHandler):
         )
 
         self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Review Added')
+        # self.response.write('Review Added')
+        self.response.write(img_url)
 
 class Verify(webapp2.RequestHandler):
     def get(self):
