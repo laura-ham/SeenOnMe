@@ -14,6 +14,7 @@
 
 import webapp2
 from store import Datastore
+import json
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -27,38 +28,57 @@ class Test(webapp2.RequestHandler):
         datastore = Datastore()
         something =  datastore.get_product_id(q)
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write(str(something))
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write( json.dumps( {'data': str(something)} ) )
 
 class Upload(webapp2.RequestHandler):
     def put(self):
+        jsonstring = self.request.body
+        jsonstring = jsonstring.replace("'", '"')
+        jsonobject = json.loads(jsonstring)
+
         product_id = self.request.get('product_id')
         merchant_id = self.request.get('merchant_id')
         order_id = self.request.get('order_id')
-        height = self.request.get('height')
+        height = jsonobject['height']
         waist = self.request.get('waist')
         size = self.request.get('size')
         desc = self.request.get('desc')
         image = self.request.get('image')
         rating = self.request.get('rating')
         supplier_id = self.request.get('supplier_id')
+<<<<<<< HEAD
+=======
+
+        # uploaded_file = self.request.POST.get('image')
+        # image = uploaded_file.file.read()
+
+        # img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
+
+>>>>>>> 6bb9cfe26e0ac1059756ad2f60eca9924ccaef2b
         datastore = Datastore()
+            
 
-        datastore.add_review(
-            product_id = product_id,
-            merchant_id = merchant_id,
-            order_id = order_id,
-            height = float(height),
-            waist = float(waist),
-            size = float(size),
-            desc = desc,
-            rating = int(rating),
-            image = image,
-            supplier_id = int(supplier_id)
-        )
+        try:
+            datastore.add_review(
+                product_id = product_id,
+                merchant_id = merchant_id,
+                order_id = order_id,
+                height = float(height),
+                waist = float(waist),
+                size = float(size),
+                desc = desc,
+                rating = int(rating),
+                image = image,
+                supplier_id = int(supplier_id)
+            )
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Review Added')
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.write( json.dumps( {'data': {'code': 201, 'message': "Successful lalalala"}	}) )
+
+        except Exception as e:
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
 class Verify(webapp2.RequestHandler):
     def get(self):
@@ -67,16 +87,20 @@ class Verify(webapp2.RequestHandler):
 
         datastore = Datastore()
 
-        verified = datastore.verify_ids(
-            product_id = product_id,
-            order_id = order_id
-        )
+        try:
+            verified = datastore.verify_ids(
+                product_id = product_id,
+                order_id = order_id
+            )
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        if verified: 
-            self.response.write('Ids verified')
-        else:
-            self.response.write('ERROR')
+            self.response.headers['Content-Type'] = 'application/json'
+            if verified: 
+                self.response.write( json.dumps( {'data': {'code': 201, 'message': "Ids Verified"}	}) )
+            else:
+                self.response.write( json.dumps( {'data': {'code': 404, 'message': "not found in database"}	}) )
+
+        except Exception as e:
+            self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
 class Register(webapp2.RequestHandler):
     def put(self):
@@ -85,13 +109,18 @@ class Register(webapp2.RequestHandler):
 
         datastore = Datastore()
 
-        datastore.add_to_review(
-            product_id = product_id,
-            order_id = order_id,
-        )
+        try:
+            datastore.add_to_review(
+                product_id = product_id,
+                order_id = order_id,
+            )
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Registered')
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.write( json.dumps( {'data': {'code': 201, 'message': "Data Successfully Added"}	}) )
+        
+        except Exception as e:
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
 class Reviews(webapp2.RequestHandler):
     def get(self):
@@ -102,15 +131,50 @@ class Reviews(webapp2.RequestHandler):
         
         datastore = Datastore()
 
-        reviews = datastore.get_reviews(
-            merchant_id = merchant_id,
-            height = float(height),
-            waist = float(waist),
-            size = float(size)
-            )
+        try:
+            if len(size) > 0:
+                size = float(size)
+            else:
+                size = None
 
-        self.response.headers['Content-Type'] = 'application/json'
-        self.response.write(reviews)
+            if len(height) > 0:
+                height = float(height)
+            else:
+                height = None
+
+            if len(waist) > 0:
+                waist = float(waist)
+            else:
+                waist = None
+
+        
+            reviews = datastore.get_reviews(
+                merchant_id = merchant_id,
+                height = height,
+                waist = waist,
+                size = size
+                )
+
+            data = []
+            for rev in reviews:
+                dataDict = dict()
+                dataDict['height'] = rev.height
+                dataDict['waist'] = rev.waist
+                dataDict['size'] = rev.size
+                dataDict['rating'] = rev.rating
+                dataDict['description'] = rev.description
+                dataDict['image'] = rev.image
+
+                data.append(dataDict)
+
+            jData = json.dumps( {'data': data } )
+
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.write(jData)
+        
+        except Exception as e:
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
