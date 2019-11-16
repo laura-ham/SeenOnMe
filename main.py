@@ -47,15 +47,12 @@ class Upload(webapp2.RequestHandler):
         image = self.request.get('image')
         rating = self.request.get('rating')
         supplier_id = self.request.get('supplier_id')
-<<<<<<< HEAD
-=======
 
         # uploaded_file = self.request.POST.get('image')
         # image = uploaded_file.file.read()
 
         # img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
 
->>>>>>> 6bb9cfe26e0ac1059756ad2f60eca9924ccaef2b
         datastore = Datastore()
             
 
