@@ -43,10 +43,10 @@ class Upload(webapp2.RequestHandler):
         rating = self.request.get('rating')
         supplier_id = self.request.get('supplier_id')
 
-        uploaded_file = self.request.POST.get('image')
-        image = uploaded_file.file.read()
+        # uploaded_file = self.request.POST.get('image')
+        # image = uploaded_file.file.read()
 
-        img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
+        # img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
 
         datastore = Datastore()
 
@@ -64,8 +64,7 @@ class Upload(webapp2.RequestHandler):
         )
 
         self.response.headers['Content-Type'] = 'text/plain'
-        # self.response.write('Review Added')
-        self.response.write(img_url)
+        self.response.write('Review Added')
 
 class Verify(webapp2.RequestHandler):
     def get(self):
@@ -109,11 +108,26 @@ class Reviews(webapp2.RequestHandler):
         
         datastore = Datastore()
 
+        if len(size) > 0:
+            size = float(size)
+        else:
+            size = None
+
+        if len(height) > 0:
+            height = float(height)
+        else:
+            height = None
+
+        if len(waist) > 0:
+            waist = float(waist)
+        else:
+            waist = None
+
         reviews = datastore.get_reviews(
             merchant_id = merchant_id,
-            height = float(height),
-            waist = float(waist),
-            size = float(size)
+            height = height,
+            waist = waist,
+            size = size
             )
 
         self.response.headers['Content-Type'] = 'application/json'
