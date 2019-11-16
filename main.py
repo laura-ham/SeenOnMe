@@ -37,16 +37,16 @@ class Upload(webapp2.RequestHandler):
         jsonstring = jsonstring.replace("'", '"')
         jsonobject = json.loads(jsonstring)
 
-        product_id = self.request.get('product_id')
-        merchant_id = self.request.get('merchant_id')
-        order_id = self.request.get('order_id')
+        product_id = jsonobject['product_id']
+        merchant_id = jsonobject['merchant_id']
+        order_id = jsonobject['order_id']
         height = jsonobject['height']
-        waist = self.request.get('waist')
-        size = self.request.get('size')
-        desc = self.request.get('desc')
-        image = self.request.get('image')
-        rating = self.request.get('rating')
-        supplier_id = self.request.get('supplier_id')
+        waist = jsonobject['waist']
+        size = jsonobject['size']
+        desc = jsonobject['desc']
+        image = jsonobject['image']
+        rating = jsonobject['rating']
+        supplier_id = jsonobject['supplier_id']
 
         # uploaded_file = self.request.POST.get('image')
         # image = uploaded_file.file.read()
@@ -79,8 +79,12 @@ class Upload(webapp2.RequestHandler):
 
 class Verify(webapp2.RequestHandler):
     def get(self):
-        product_id = self.request.get('product_id')
-        order_id = self.request.get('order_id')
+        jsonstring = self.request.body
+        jsonstring = jsonstring.replace("'", '"')
+        jsonobject = json.loads(jsonstring)
+        
+        product_id = jsonobject['product_id']
+        order_id = jsonobject['order_id']
 
         datastore = Datastore()
 
@@ -101,8 +105,12 @@ class Verify(webapp2.RequestHandler):
 
 class Register(webapp2.RequestHandler):
     def put(self):
-        product_id = self.request.get('product_id')
-        order_id = self.request.get('order_id')
+        jsonstring = self.request.body
+        jsonstring = jsonstring.replace("'", '"')
+        jsonobject = json.loads(jsonstring)
+        
+        product_id = jsonobject['product_id']
+        order_id = jsonobject['order_id']
 
         datastore = Datastore()
 
@@ -121,10 +129,14 @@ class Register(webapp2.RequestHandler):
 
 class Reviews(webapp2.RequestHandler):
     def get(self):
-        merchant_id = self.request.get('merchant_id')
-        height = self.request.get('height')
-        waist = self.request.get('waist')
-        size = self.request.get('size')
+        jsonstring = self.request.body
+        jsonstring = jsonstring.replace("'", '"')
+        jsonobject = json.loads(jsonstring)
+
+        height = jsonobject['height']
+        waist = jsonobject['waist']
+        size = jsonobject['size']
+        merchant_id = jsonobject['merchant_id']
         
         datastore = Datastore()
 
