@@ -42,8 +42,6 @@ class Upload(webapp2.RequestHandler):
         image = self.request.get('image')
         rating = self.request.get('rating')
         supplier_id = self.request.get('supplier_id')
-
-        
         datastore = Datastore()
 
         datastore.add_review(
