@@ -168,7 +168,7 @@ class Reviews(webapp2.RequestHandler):
 
                 data.append(dataDict)
 
-            jData = json.dumps( {'data': data } )
+            jData = json.dumps({'data':data})
 
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write(jData)
