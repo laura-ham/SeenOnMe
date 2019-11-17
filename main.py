@@ -15,9 +15,18 @@
 import webapp2
 from store import Datastore
 import json
+import imagecloud
+
+# class Uploader(webapp2.RequestHandler):
+#     def get(self):
+#         # self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
+#         self.response.headers['Content-Type'] = 'text/html'
+#         file = open('index.html','r')
+#         self.response.write(str(file.read()))
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
+        self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write('Hello, World!')
 
@@ -28,30 +37,31 @@ class Test(webapp2.RequestHandler):
         datastore = Datastore()
         something =  datastore.get_product_id(q)
 
+        self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write( json.dumps( {'data': str(something)} ) )
 
 class Upload(webapp2.RequestHandler):
     def put(self):
-        jsonstring = self.request.body
-        jsonstring = jsonstring.replace("'", '"')
-        jsonobject = json.loads(jsonstring)
+        # jsonstring = self.request.body
+        # jsonstring = jsonstring.replace("'", '"')
+        # jsonobject = json.loads(jsonstring)
 
-        product_id = jsonobject['product_id']
-        merchant_id = jsonobject['merchant_id']
-        order_id = jsonobject['order_id']
-        height = jsonobject['height']
-        waist = jsonobject['waist']
-        size = jsonobject['size']
-        desc = jsonobject['desc']
-        image = jsonobject['image']
-        rating = jsonobject['rating']
-        supplier_id = jsonobject['supplier_id']
+        product_id = self.request.get('product_id')
+        merchant_id = self.request.get('merchant_id')
+        order_id = self.request.get('order_id')
+        height = self.request.get('height')
+        waist = self.request.get('waist')
+        size = self.request.get('size')
+        desc = self.request.get('desc')
+        # image = self.request.get('image')
+        rating = self.request.get('rating')
+        supplier_id = self.request.get('supplier_id')
 
-        # uploaded_file = self.request.POST.get('image')
-        # image = uploaded_file.file.read()
+        uploaded_file = self.request.POST.get('image')
+        image = uploaded_file.file.read()
 
-        # img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
+        img_url = imagecloud.upload_image(image, order_id + ":" + merchant_id)
 
         datastore = Datastore()
             
@@ -66,14 +76,16 @@ class Upload(webapp2.RequestHandler):
                 size = float(size),
                 desc = desc,
                 rating = int(rating),
-                image = image,
+                image = img_url,
                 supplier_id = int(supplier_id)
             )
 
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write( json.dumps( {'data': {'code': 201, 'message': "Successful lalalala"}	}) )
 
         except Exception as e:
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
@@ -90,6 +102,7 @@ class Verify(webapp2.RequestHandler):
                 order_id = order_id
             )
 
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.headers['Content-Type'] = 'application/json'
             if verified: 
                 self.response.write( json.dumps( {'data': {'code': 201, 'message': "Ids Verified"}	}) )
@@ -97,6 +110,7 @@ class Verify(webapp2.RequestHandler):
                 self.response.write( json.dumps( {'data': {'code': 404, 'message': "not found in database"}	}) )
 
         except Exception as e:
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
 class Register(webapp2.RequestHandler):
@@ -115,10 +129,12 @@ class Register(webapp2.RequestHandler):
                 order_id = order_id,
             )
 
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write( json.dumps( {'data': {'code': 201, 'message': "Data Successfully Added"}	}) )
         
         except Exception as e:
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
@@ -170,10 +186,12 @@ class Reviews(webapp2.RequestHandler):
 
             jData = json.dumps({'data':data})
 
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write(jData)
         
         except Exception as e:
+            self.response.headers.add_header("Access-Control-Allow-Origin", "http://localhost:4200")
             self.response.headers['Content-Type'] = 'application/json'
             self.response.write( json.dumps( {'data': {'code': 500, 'message': e.message}	}) )
 
