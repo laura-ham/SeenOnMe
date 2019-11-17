@@ -79,11 +79,8 @@ class Upload(webapp2.RequestHandler):
 
 class Verify(webapp2.RequestHandler):
     def get(self):
-        jsonstring = self.request.body
-        jsonstring = jsonstring.replace("'", '"')
-        jsonobject = json.loads(jsonstring)
-        product_id = jsonobject['product_id']
-        order_id = jsonobject['order_id']
+        product_id = self.request.get('product_id')
+        order_id = self.request.get('order_id')
 
         datastore = Datastore()
 
@@ -127,14 +124,11 @@ class Register(webapp2.RequestHandler):
 
 class Reviews(webapp2.RequestHandler):
     def get(self):
-        jsonstring = self.request.body
-        jsonstring = jsonstring.replace("'", '"')
-        jsonobject = json.loads(jsonstring)
 
-        merchant_id = jsonobject['merchant_id']
-        height = jsonobject['height']
-        waist = jsonobject['waist']
-        size = jsonobject['size']
+        merchant_id = self.request.get('merchant_id')
+        height = self.request.get('height')
+        waist = self.request.get('waist')
+        size = self.request.get('size')
         
         datastore = Datastore()
 
