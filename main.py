@@ -82,11 +82,6 @@ class Verify(webapp2.RequestHandler):
         jsonstring = self.request.body
         jsonstring = jsonstring.replace("'", '"')
         jsonobject = json.loads(jsonstring)
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> 7d159b0ef9176984d86b6bdcf2e15b0461830e2d
         product_id = jsonobject['product_id']
         order_id = jsonobject['order_id']
 
@@ -112,11 +107,6 @@ class Register(webapp2.RequestHandler):
         jsonstring = self.request.body
         jsonstring = jsonstring.replace("'", '"')
         jsonobject = json.loads(jsonstring)
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> 7d159b0ef9176984d86b6bdcf2e15b0461830e2d
         product_id = jsonobject['product_id']
         order_id = jsonobject['order_id']
 
