@@ -2,7 +2,7 @@
 
 This project is a submission for Junction 2019 in reference to the challenge posed by Columbia Road. The aim of this project is to provide a novel method to reduce the return ratio in e-commerce platforms. We do this by providing an added tool for the customers to have a feel and look of the product by having access to experiences of the community. 
 
-The project consists of a Google App Engine based API and database as the core engine, along with a sample Angular JS application.
+The project consists of a Google App Engine based API and database as the core engine, along with a sample [Angular JS application](https://github.com/irisfffff/seenonme-junction2019).
 
 ## Setup
 
